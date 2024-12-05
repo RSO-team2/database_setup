@@ -1,5 +1,6 @@
 import json
 import os
+import random
 
 import requests
 from dotenv import load_dotenv
@@ -39,7 +40,7 @@ def _get_food_list(headers, data):
         return _get_food_list(headers, data)
 
 
-def _get_resturant_name(headers, data, restaurant_type): 
+def _get_resturant_name(headers, data, restaurant_type):
     """
     Generates a fitting name for a restaurant based on the given type.
 
@@ -51,7 +52,9 @@ def _get_resturant_name(headers, data, restaurant_type):
     Returns:
         str: The generated restaurant name.
     """
-    data["prompt"] = f"Generate a fitting name for a {restaurant_type} restaurant. Make sure to return only the name in the form of <name>, no extra text."
+    data["prompt"] = (
+        f"Generate a fitting name for a {restaurant_type} restaurant. Make sure to return only the name in the form of <name>, no extra text."
+    )
     response = requests.post(
         os.getenv("OLLAMA_URL"), headers=headers, data=json.dumps(data)
     )
@@ -64,17 +67,21 @@ def populate_tables(cursor):
     Populates the database tables with restaurant and menu data.
 
     Args:
-        cursor (psycopg2.cursor): A cursor object to execute database commands.
+        cursor (psycopg2.cursor): A cursor object to execute database operations.
 
     The function performs the following steps:
     1. Retrieves a list of food items categorized by restaurant type.
-    2. For each restaurant type, it gets the restaurant name and inserts it into the 'restaurants' table.
-    3. Retrieves the generated restaurant ID.
-    4. For each dish in the restaurant's menu, it checks if the dish already exists in the 'menu_items' table.
-       - If the dish exists, it retrieves the dish ID.
-       - If the dish does not exist, it inserts the dish into the 'menu_items' table and retrieves the new dish ID.
-    5. Collects all dish IDs for the restaurant's menu.
-    6. Inserts the restaurant ID and the list of dish IDs into the 'menus' table.
+    2. For each restaurant type, it fetches or generates a restaurant name.
+    3. Inserts the restaurant name and type into the 'restaurants' table and retrieves the restaurant ID.
+    4. For each dish in the restaurant's menu:
+        - Checks if the dish already exists in the 'menu_items' table.
+        - If it exists, retrieves the item ID.
+        - If it does not exist, inserts the dish into the 'menu_items' table and retrieves the new item ID.
+    5. Collects all menu item IDs for the restaurant and inserts them into the 'menus' table.
+
+    Note:
+        - The function assumes the existence of helper functions `_get_food_list` and `_get_resturant_name`.
+        - The function uses environment variables and random values for some operations.
     """
     headers = {
         "Content-Type": "application/json",
@@ -84,7 +91,8 @@ def populate_tables(cursor):
     for restaurant_type, dishes in food_data.items():
         name = _get_resturant_name(headers, data, restaurant_type)
         cursor.execute(
-            f"INSERT INTO restaurants (name, type) VALUES (%s, %s) RETURNING ID;", (name, restaurant_type)
+            f"INSERT INTO restaurants (name, type) VALUES (%s, %s) RETURNING ID;",
+            (name, restaurant_type),
         )
         restaurant_id = cursor.fetchone()[0]
         restaurant_menu_ids = []
@@ -94,7 +102,13 @@ def populate_tables(cursor):
             if cursor.fetchone():
                 item_id = cursor.fetchone()
             else:
-                cursor.execute("INSERT INTO menu_items (name) VALUES (%s) RETURNING ID;", (dish,)
+                price = round(random.uniform(7.60, 15.80), 2)
+                cursor.execute(
+                    "INSERT INTO menu_items (name, price) VALUES (%s, %s) RETURNING ID;",
+                    (
+                        dish,
+                        price,
+                    ),
                 )
                 item_id = cursor.fetchone()[0]
             restaurant_menu_ids.append(item_id)
@@ -102,4 +116,3 @@ def populate_tables(cursor):
             "INSERT INTO menus (restaurant_id, items) VALUES (%s, %s) RETURNING ID;",
             (restaurant_id, restaurant_menu_ids),
         )
-

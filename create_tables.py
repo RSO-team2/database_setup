@@ -29,7 +29,8 @@ def make_tables():
         """
         CREATE TABLE IF NOT EXISTS menu_items (
             id SERIAL PRIMARY KEY,
-            name VARCHAR(255)
+            name VARCHAR(255),
+            price DECIMAL(10, 2)
         );
     """
     )

@@ -71,6 +71,7 @@ Below are the column definitions of the created tables (subject to change).
 |-------------|-----|--------------|----------|-----------|----------|-----------------------------------|
 | id          | 1   | serial4      | [NULL]   | [NULL]    | true     | nextval('menu_items_id_seq'::regclass) |
 | name        | 2   | varchar(255) | [NULL]   | default   | false    | [NULL]                            |
+| price       | 3   | numeric(10, 2)  | [NULL]   | [NULL]    | false    | [NULL]                            |
 
 
 [^1]: [RSO-Team2 Repositories](https://github.com/orgs/RSO-team2/repositories)
