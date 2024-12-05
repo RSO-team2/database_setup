@@ -11,7 +11,7 @@ def make_tables():
     cursor = conn.cursor()
 
     print("Creating items table...")
-    cursor.execute("DROP TABLE IF EXISTS menu_items CASCADE;")
+    # cursor.execute("DROP TABLE IF EXISTS menu_items CASCADE;")
     cursor.execute(
         """
         CREATE TABLE IF NOT EXISTS menu_items (
@@ -22,7 +22,7 @@ def make_tables():
     )
 
     print("Creating restaurants table...")
-    cursor.execute("DROP TABLE IF EXISTS restaurants CASCADE;")
+    # cursor.execute("DROP TABLE IF EXISTS restaurants CASCADE;")
     cursor.execute(
         """
         CREATE TABLE IF NOT EXISTS restaurants (
@@ -34,7 +34,7 @@ def make_tables():
     )
 
     print("Creating menus table...")
-    cursor.execute("DROP TABLE IF EXISTS menus CASCADE;")
+    # cursor.execute("DROP TABLE IF EXISTS menus CASCADE;")
     cursor.execute(
         """
         CREATE TABLE IF NOT EXISTS menus (
@@ -57,18 +57,36 @@ def make_tables():
         """
     )
 
-    print("Creating order table...")
-    cursor.execute("DROP TABLE IF EXISTS orders CASCADE;")
+    print("Creating order statues table...")
+    # cursor.execute("DROP TABLE IF EXISTS orders CASCADE;")
+    cursor.execute(
+        """
+        CREATE TABLE IF NOT EXISTS order_statuses (
+            id SERIAL PRIMARY KEY,
+            status VARCHAR(255)
+        );
+    """
+    )
+
+    cursor.execute("""
+        INSERT INTO order_statuses (status) VALUES ('pending');
+        INSERT INTO order_statuses (status) VALUES ('processing');
+        INSERT INTO order_statuses (status) VALUES ('delivered');
+    """)
+
+    print("Creating orders table...")
+    # cursor.execute("DROP TABLE IF EXISTS orders CASCADE;")
     cursor.execute(
         """
         CREATE TABLE IF NOT EXISTS orders (
             id SERIAL PRIMARY KEY,
             customer_id INT references users(user_id),
-            order_date DATE,
+            order_date DATETIME,
             total_amount DECIMAL(10, 2),
             items TEXT[],
             restaurant_id INT references restaurants(id),
-            status INT
+            status INT references order_statuses(id),
+            delivery_address VARCHAR(255)
         );
     """
     )
