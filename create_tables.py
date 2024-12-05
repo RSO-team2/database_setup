@@ -3,10 +3,23 @@ import os
 import psycopg2
 from dotenv import load_dotenv
 
+load_dotenv()
+
 
 def make_tables():
-    load_dotenv()
-
+    """
+    Creates necessary tables for the database if they do not already exist.
+    The tables created are:
+    - menu_items: Stores menu items with id and name.
+    - restaurants: Stores restaurant information with id, name, and type.
+    - menus: Stores menus with id, restaurant_id, and items.
+    - users: Stores user information with user_id, user_name, user_email, user_password, and user_address.
+    - order_statuses: Stores order statuses with id and status.
+    - orders: Stores order information with id, customer_id, order_date, total_amount, items, restaurant_id, status, and delivery_address.
+    Inserts initial order statuses into the order_statuses table.
+    Returns:
+        tuple: A tuple containing the database connection and cursor.
+    """
     conn = psycopg2.connect(os.getenv("DATABASE_URL"))
     cursor = conn.cursor()
 
@@ -69,11 +82,13 @@ def make_tables():
     """
     )
 
-    cursor.execute("""
+    cursor.execute(
+        """
         INSERT INTO order_statuses (status) VALUES ('pending');
         INSERT INTO order_statuses (status) VALUES ('processing');
         INSERT INTO order_statuses (status) VALUES ('delivered');
-    """)
+    """
+    )
 
     print("Creating orders table...")
     # cursor.execute("DROP TABLE IF EXISTS orders CASCADE;")
@@ -84,7 +99,7 @@ def make_tables():
             customer_id INT references users(user_id),
             order_date DATETIME,
             total_amount DECIMAL(10, 2),
-            items TEXT[],
+            items INT[],
             restaurant_id INT references restaurants(id),
             status INT references order_statuses(id),
             delivery_address VARCHAR(255)
