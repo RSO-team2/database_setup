@@ -52,7 +52,8 @@ def make_tables():
             user_id SERIAL PRIMARY KEY,
             user_name VARCHAR(255) NOT NULL,
             user_email VARCHAR(255) NOT NULL,
-            user_password VARCHAR(255) NOT NULL
+            user_password TEXT NOT NULL,
+            user_adress TEXT NOT NULL
             );
         """
     )
