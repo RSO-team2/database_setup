@@ -24,7 +24,7 @@ def make_tables():
     cursor = conn.cursor()
 
     print("Creating items table...")
-    # cursor.execute("DROP TABLE IF EXISTS menu_items CASCADE;")
+    cursor.execute("DROP TABLE IF EXISTS menu_items CASCADE;")
     cursor.execute(
         """
         CREATE TABLE IF NOT EXISTS menu_items (
@@ -36,7 +36,7 @@ def make_tables():
     )
 
     print("Creating restaurants table...")
-    # cursor.execute("DROP TABLE IF EXISTS restaurants CASCADE;")
+    cursor.execute("DROP TABLE IF EXISTS restaurants CASCADE;")
     cursor.execute(
         """
         CREATE TABLE IF NOT EXISTS restaurants (
@@ -48,7 +48,7 @@ def make_tables():
     )
 
     print("Creating menus table...")
-    # cursor.execute("DROP TABLE IF EXISTS menus CASCADE;")
+    cursor.execute("DROP TABLE IF EXISTS menus CASCADE;")
     cursor.execute(
         """
         CREATE TABLE IF NOT EXISTS menus (
@@ -60,6 +60,7 @@ def make_tables():
     )
 
     print("Creating users table...")
+    cursor.execute("DROP TABLE IF EXISTS users CASCADE;")
     cursor.execute(
         """
         CREATE TABLE IF NOT EXISTS users (
@@ -67,13 +68,14 @@ def make_tables():
             user_name VARCHAR(255) NOT NULL,
             user_email VARCHAR(255) NOT NULL,
             user_password TEXT NOT NULL,
-            user_adress TEXT NOT NULL
+            user_adress TEXT NOT NULL,
+            user_type VARCHAR(255) NOT NULL
             );
         """
     )
 
     print("Creating order statues table...")
-    # cursor.execute("DROP TABLE IF EXISTS orders CASCADE;")
+    cursor.execute("DROP TABLE IF EXISTS order_statuses CASCADE;")
     cursor.execute(
         """
         CREATE TABLE IF NOT EXISTS order_statuses (
@@ -92,18 +94,34 @@ def make_tables():
     )
 
     print("Creating orders table...")
-    # cursor.execute("DROP TABLE IF EXISTS orders CASCADE;")
+    cursor.execute("DROP TABLE IF EXISTS orders CASCADE;")
     cursor.execute(
         """
         CREATE TABLE IF NOT EXISTS orders (
             id SERIAL PRIMARY KEY,
             customer_id INT references users(user_id),
-            order_date DATETIME,
+            order_date TIMESTAMP,
             total_amount DECIMAL(10, 2),
             items INT[],
             restaurant_id INT references restaurants(id),
             status INT references order_statuses(id),
             delivery_address VARCHAR(255)
+        );
+    """
+    )
+
+    print("Creating reservation table...")
+    cursor.execute("DROP TABLE IF EXISTS reservations CASCADE;")
+    cursor.execute(
+        """
+        CREATE TABLE IF NOT EXISTS reservations (
+            id SERIAL PRIMARY KEY,
+            customer_id INT references users(user_id),
+            restaurant_id INT references restaurants(id),
+            make_date TIMESTAMP,
+            reservation_date TIMESTAMP,
+            num_persons INT,
+            optional_message VARCHAR(255)
         );
     """
     )
