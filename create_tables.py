@@ -32,7 +32,7 @@ def make_tables():
             name VARCHAR(255),
             price DECIMAL(10, 2)
         );
-    """
+        """
     )
 
     print("Creating restaurants table...")
@@ -44,7 +44,7 @@ def make_tables():
             name VARCHAR(255),
             type VARCHAR(255)
         );
-    """
+        """
     )
 
     print("Creating menus table...")
@@ -56,7 +56,26 @@ def make_tables():
             restaurant_id INT references restaurants(id),
             items INT[]
         );
-    """
+        """
+    )
+
+    print("Creating user types table...")
+    cursor.execute("DROP TABLE IF EXISTS user_types CASCADE;")
+    cursor.execute(
+        """
+        CREATE TABLE IF NOT EXISTS user_types (
+            id SERIAL PRIMARY KEY,
+            type VARCHAR(255)
+        );
+        """
+    )
+
+    cursor.execute(
+        """
+        INSERT INTO user_types (type) VALUES ('restaurant');
+        INSERT INTO user_types (type) VALUES ('courier');
+        INSERT INTO user_types (type) VALUES ('customer');
+        """
     )
 
     print("Creating users table...")
@@ -69,12 +88,12 @@ def make_tables():
             user_email VARCHAR(255) NOT NULL,
             user_password TEXT NOT NULL,
             user_adress TEXT NOT NULL,
-            user_type VARCHAR(255) NOT NULL
+            user_type INT references user_types(id)
             );
         """
     )
 
-    print("Creating order statues table...")
+    print("Creating order statuses table...")
     cursor.execute("DROP TABLE IF EXISTS order_statuses CASCADE;")
     cursor.execute(
         """
@@ -82,7 +101,7 @@ def make_tables():
             id SERIAL PRIMARY KEY,
             status VARCHAR(255)
         );
-    """
+        """
     )
 
     cursor.execute(
@@ -90,7 +109,7 @@ def make_tables():
         INSERT INTO order_statuses (status) VALUES ('pending');
         INSERT INTO order_statuses (status) VALUES ('processing');
         INSERT INTO order_statuses (status) VALUES ('delivered');
-    """
+        """
     )
 
     print("Creating orders table...")
@@ -107,7 +126,7 @@ def make_tables():
             status INT references order_statuses(id),
             delivery_address VARCHAR(255)
         );
-    """
+        """
     )
 
     print("Creating reservation table...")
@@ -123,7 +142,7 @@ def make_tables():
             num_persons INT,
             optional_message VARCHAR(255)
         );
-    """
+        """
     )
 
     cursor.execute(
