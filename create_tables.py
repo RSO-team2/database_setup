@@ -87,7 +87,7 @@ def make_tables():
             user_name VARCHAR(255) NOT NULL,
             user_email VARCHAR(255) NOT NULL,
             user_password TEXT NOT NULL,
-            user_adress TEXT NOT NULL,
+            user_address TEXT NOT NULL,
             user_type INT references user_types(id)
             );
         """
