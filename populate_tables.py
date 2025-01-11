@@ -91,8 +91,16 @@ def populate_tables(cursor):
     for restaurant_type, dishes in food_data.items():
         name = _get_resturant_name(headers, data, restaurant_type)
         cursor.execute(
-            f"INSERT INTO restaurants (name, type) VALUES (%s, %s) RETURNING ID;",
-            (name, restaurant_type),
+            f"INSERT INTO restaurants (name, type, rating, address, average_time, price_range, image) VALUES (%s, %s, %s, %s, %s, %s, %s) RETURNING ID;",
+            (
+                name,
+                restaurant_type,
+                random.randint(155, 500) / 100,
+                "",
+                5 * round(random.randint(15, 60) / 5),
+                random.randint(1, 4),
+                requests.get("https://foodish-api.com/api/").json()["image"],
+            ),
         )
         restaurant_id = cursor.fetchone()[0]
         restaurant_menu_ids = []
@@ -104,10 +112,11 @@ def populate_tables(cursor):
             else:
                 price = round(random.uniform(7.60, 15.80), 2)
                 cursor.execute(
-                    "INSERT INTO menu_items (name, price) VALUES (%s, %s) RETURNING ID;",
+                    "INSERT INTO menu_items (name, price, image) VALUES (%s, %s, %s) RETURNING ID;",
                     (
                         dish,
                         price,
+                        requests.get("https://foodish-api.com/api/").json()["image"]
                     ),
                 )
                 item_id = cursor.fetchone()[0]

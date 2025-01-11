@@ -30,7 +30,8 @@ def make_tables():
         CREATE TABLE IF NOT EXISTS menu_items (
             id SERIAL PRIMARY KEY,
             name VARCHAR(255),
-            price DECIMAL(10, 2)
+            price DECIMAL(10, 2),
+            image VARCHAR(255)
         );
         """
     )
@@ -42,7 +43,12 @@ def make_tables():
         CREATE TABLE IF NOT EXISTS restaurants (
             id SERIAL PRIMARY KEY,
             name VARCHAR(255),
-            type VARCHAR(255)
+            type VARCHAR(255),
+            rating DECIMAL(3, 2),
+            address VARCHAR(255),
+            average_time INT,
+            price_range INT,
+            image VARCHAR(255)
         );
         """
     )
