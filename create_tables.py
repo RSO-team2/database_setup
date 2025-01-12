@@ -94,7 +94,8 @@ def make_tables():
             user_email VARCHAR(255) NOT NULL,
             user_password TEXT NOT NULL,
             user_address TEXT NOT NULL,
-            user_type INT references user_types(id)
+            user_type INT references user_types(id),
+            restaurant_id INT
             );
         """
     )
@@ -113,7 +114,8 @@ def make_tables():
     cursor.execute(
         """
         INSERT INTO order_statuses (status) VALUES ('pending');
-        INSERT INTO order_statuses (status) VALUES ('processing');
+        INSERT INTO order_statuses (status) VALUES ('preparing');
+        INSERT INTO order_statuses (status) VALUES ('in delivery');
         INSERT INTO order_statuses (status) VALUES ('delivered');
         """
     )
