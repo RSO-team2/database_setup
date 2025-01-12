@@ -17,12 +17,24 @@ Below are the column definitions of the created tables (subject to change).
 
 ### `users`
 
-| Column Name    | #   | Data type    | Identity | Collation | Not Null | Default                                    | 
-|----------------|-----|--------------|----------|-----------|----------|--------------------------------------------|
-| user_id        | 1   | serial4      | [NULL]   | [NULL]    | true     | nextval('users_user_id_seq'::regclass)     |
-| user_name      | 2   | varchar(255) | [NULL]   | default   | true     | [NULL]                                     |
-| user_email     | 3   | varchar(255) | [NULL]   | default   | true     | [NULL]                                     |
-| user_password  | 5   | text         | [NULL]   | default   | false    | [NULL]                                     |
+| Column Name    | #   | Data type    | Identity | Collation | Not Null | Default                                    | Comment |
+|----------------|-----|--------------|----------|-----------|----------|--------------------------------------------|---------|
+| user_id        | 1   | serial4      | [NULL]   | [NULL]    | true     | nextval('users_user_id_seq'::regclass)     | [NULL]  |
+| user_name      | 2   | varchar(255) | [NULL]   | default   | true     | [NULL]                                     | [NULL]  |
+| user_email     | 3   | varchar(255) | [NULL]   | default   | true     | [NULL]                                     | [NULL]  |
+| user_password  | 4   | text         | [NULL]   | default   | true     | [NULL]                                     | [NULL]  |
+| user_address   | 5   | text         | [NULL]   | default   | true     | [NULL]                                     | [NULL]  |
+| user_type      | 6   | int4         | [NULL]   | [NULL]    | false    | [NULL]                                     | [NULL]  |
+| restaurant_id  | 7   | int4         | [NULL]   | [NULL]    | false    | [NULL]                                     | [NULL]  |
+
+### `user_types`
+
+### `user_types`
+
+| Column Name | #   | Data type    | Identity | Collation | Not Null | Default                                    | Comment |
+|-------------|-----|--------------|----------|-----------|----------|--------------------------------------------|---------|
+| id          | 1   | serial4      | [NULL]   | [NULL]    | true     | nextval('user_types_id_seq'::regclass)     | [NULL]  |
+| type        | 2   | varchar(255) | [NULL]   | default   | false    | [NULL]                                     | [NULL]  |
 
 
 ### `orders`
@@ -49,29 +61,38 @@ Below are the column definitions of the created tables (subject to change).
 
 ### `restaurants`
 
-| Column Name | #   | Data type    | Identity | Collation | Not Null | Default                                    |
-|-------------|-----|--------------|----------|-----------|----------|--------------------------------------------|
-| id          | 1   | serial4      | [NULL]   | [NULL]    | true     | nextval('restaurants_id_seq'::regclass)    |
-| name        | 2   | varchar(255) | [NULL]   | default   | false    | [NULL]                                     |
-| type        | 3   | varchar(255) | [NULL]   | default   | false    | [NULL]                                     |
+| Column Name  | #   | Data type    | Identity | Collation | Not Null | Default                                    | Comment |
+|--------------|-----|--------------|----------|-----------|----------|--------------------------------------------|---------|
+| id           | 1   | serial4      | [NULL]   | [NULL]    | true     | nextval('restaurants_id_seq'::regclass)    | [NULL]  |
+| name         | 2   | varchar(255) | [NULL]   | default   | false    | [NULL]                                     | [NULL]  |
+| type         | 3   | varchar(255) | [NULL]   | default   | false    | [NULL]                                     | [NULL]  |
+| rating       | 4   | numeric(3, 2)| [NULL]   | [NULL]    | false    | [NULL]                                     | [NULL]  |
+| address      | 5   | varchar(255) | [NULL]   | default   | false    | [NULL]                                     | [NULL]  |
+| average_time | 6   | int4         | [NULL]   | [NULL]    | false    | [NULL]                                     | [NULL]  |
+| price_range  | 7   | int4         | [NULL]   | [NULL]    | false    | [NULL]                                     | [NULL]  |
+| image        | 8   | varchar(255) | [NULL]   | default   | false    | [NULL]                                     | [NULL]  |
+
 
 
 ### `menus`
 
-| Column Name   | #   | Data type | Identity | Collation | Not Null | Default                           |
-|---------------|-----|-----------|----------|-----------|----------|-----------------------------------|
-| id            | 1   | serial4   | [NULL]   | [NULL]    | true     | nextval('menus_id_seq'::regclass) |
-| restaurant_id | 2   | int4      | [NULL]   | [NULL]    | false    | [NULL]                            |
-| items         | 3   | _int4[]     | [NULL]   | [NULL]    | false    | [NULL]                            |
+| Column Name   | #   | Data type | Identity | Collation | Not Null | Default                           | Comment |
+|---------------|-----|-----------|----------|-----------|----------|-----------------------------------|---------|
+| id            | 1   | serial4   | [NULL]   | [NULL]    | true     | nextval('menus_id_seq'::regclass) | [NULL]  |
+| restaurant_id | 2   | int4      | [NULL]   | [NULL]    | false    | [NULL]                            | [NULL]  |
+| items         | 3   | _int4     | [NULL]   | [NULL]    | false    | [NULL]                            | [NULL]  |
+
 
 
 ### `menu_items`
 
-| Column Name | #   | Data type    | Identity | Collation | Not Null | Default                           |
-|-------------|-----|--------------|----------|-----------|----------|-----------------------------------|
-| id          | 1   | serial4      | [NULL]   | [NULL]    | true     | nextval('menu_items_id_seq'::regclass) |
-| name        | 2   | varchar(255) | [NULL]   | default   | false    | [NULL]                            |
-| price       | 3   | numeric(10, 2)  | [NULL]   | [NULL]    | false    | [NULL]                            |
+| Column Name | #   | Data type      | Identity | Collation | Not Null | Default                                    | Comment |
+|-------------|-----|----------------|----------|-----------|----------|--------------------------------------------|---------|
+| id          | 1   | serial4        | [NULL]   | [NULL]    | true     | nextval('menu_items_id_seq'::regclass)     | [NULL]  |
+| name        | 2   | varchar(255)   | [NULL]   | default   | false    | [NULL]                                     | [NULL]  |
+| price       | 3   | numeric(10, 2) | [NULL]   | [NULL]    | false    | [NULL]                                     | [NULL]  |
+| image       | 4   | varchar(255)   | [NULL]   | default   | false    | [NULL]                                     | [NULL]  |
+
 
 
 [^1]: [RSO-Team2 Repositories](https://github.com/orgs/RSO-team2/repositories)

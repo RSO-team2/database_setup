@@ -14,6 +14,7 @@ def make_tables():
     - restaurants: Stores restaurant information with id, name, and type.
     - menus: Stores menus with id, restaurant_id, and items.
     - users: Stores user information with user_id, user_name, user_email, user_password, and user_address.
+    - user_types: Stores user types with id and type.
     - order_statuses: Stores order statuses with id and status.
     - orders: Stores order information with id, customer_id, order_date, total_amount, items, restaurant_id, status, and delivery_address.
     Inserts initial order statuses into the order_statuses table.
